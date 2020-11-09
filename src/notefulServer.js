@@ -1,7 +1,7 @@
 require('dotenv').config();
 const knex = require('knex');
-const NoteService = require('./services/note-service');
-const FolderService = require('./services/folder-service');
+const NoteService = require('./notes/note-service');
+const FolderService = require('./folders/folder-service');
 
 const knexInstance = knex({
     client: 'pg',
