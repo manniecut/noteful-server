@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const xss = require('xss')
 const NoteService = require('./note-service')
@@ -14,7 +15,7 @@ noteRouter
             .then(note => {
                 res.json({
                     id: note.id,
-                    title: xss(article.title),
+                    title: xss(note.title),
                     modified: note.modified,
                     content: xss(note.content),
                     folderId: note.folderId
@@ -42,7 +43,7 @@ noteRouter
             .then(note => {
                 res
                     .status(201)
-                    .location(`/articles/${note.id}`)
+                    .location(path.posix.join(req.originalUrl, `/${note.id}`))
                     .json(note)
             })
             .catch(next)
@@ -55,14 +56,14 @@ noteRouter
             req.app.get('db'),
             req.params.note_id
         )
-            .then(article => {
-                if (!article) {
+            .then(note => {
+                if (!note) {
                     return res.status(404).json({
                         error: { message: `Note doesn't exist` }
 
                     })
                 }
-                res.article = article
+                res.note = note
                 next()
             })
             .catch(next)
@@ -70,7 +71,7 @@ noteRouter
     .get((req, res, next) => {
         res.json({
             id: note.id,
-            title: xss(article.title),
+            title: xss(note.title),
             modified: note.modified,
             content: xss(note.content),
             folderId: note.folderId

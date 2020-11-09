@@ -14,7 +14,7 @@ folderRouter
             .then(folder => {
                 res.json({
                     id: folder.id,
-                    title: xss(article.title)
+                    title: xss(folder.title)
                 })
             })
             .catch(next)
@@ -38,7 +38,7 @@ folderRouter
             .then(folder => {
                 res
                     .status(201)
-                    .location(`/articles/${folder.id}`)
+                    .location(req.originalUrl + `/${folder.id}`)
                     .json(folder)
             })
             .catch(next)
@@ -51,14 +51,14 @@ folderRouter
             req.app.get('db'),
             req.params.folder_id
         )
-            .then(article => {
-                if (!article) {
+            .then(folder => {
+                if (!folder) {
                     return res.status(404).json({
                         error: { message: `Folder doesn't exist` }
 
                     })
                 }
-                res.article = article
+                res.folder = folder
                 next()
             })
             .catch(next)
@@ -66,7 +66,7 @@ folderRouter
     .get((req, res, next) => {
         res.json({
             id: folder.id,
-            title: xss(article.title),
+            title: xss(folder.title),
             modified: folder.modified,
             content: xss(folder.content),
             folderId: folder.folderId
