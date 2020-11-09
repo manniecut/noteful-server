@@ -82,7 +82,27 @@ noteRouter
             req.app.get('db'),
             req.params.note_id
         )
-            .then(() => {
+            .then(numRowsAffected => {
+                res.status(204).end()
+            })
+            .catch(next)
+    })
+    .patch(jsonParser, (req, res, next) => {
+        const { title, content, folderId } = req.body
+        const noteToUpdate = { title, content, folderId }
+
+        if (!noteToUpdate.title)
+            return res.status(400).json({
+                error: {
+                    message: `Request body must contain 'title'`
+                }
+            })
+        NoteService.updateNote(
+            req.app.get('db'),
+            req.params.note_id,
+            noteToUpdate
+        )
+            .then(numRowsAffected => {
                 res.status(204).end()
             })
             .catch(next)
