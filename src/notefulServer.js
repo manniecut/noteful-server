@@ -8,13 +8,7 @@ const knexInstance = knex({
     connection: process.env.DB_URL,
 })
 
-
-/* THE FOLLOWING IS THE CODE IN QUESTION
- * I understand what they are doing as chunks
- * But why are they all chained in this way with .then()?
- * In case you hadn't seen it before, knex is an SQL translator they have us using.
- *  */
-
+/* If you're checking this again, I figured it out. This script is no longer being used. */
 NoteService.getAllNotes(knexInstance)
     .then(Notes => console.log(Notes))
     .then(() =>
