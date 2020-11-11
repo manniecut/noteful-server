@@ -13,11 +13,8 @@ folderRouter
         FolderService.getAllFolders(
             req.app.get('db')
         )
-            .then(folder => {
-                res.json({
-                    id: folder.id,
-                    title: xss(folder.title)
-                })
+            .then(folders => {
+                res.json(folders)
             })
             .catch(next)
     })

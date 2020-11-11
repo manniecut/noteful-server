@@ -9,18 +9,9 @@ const jsonParser = express.json()
 noteRouter
     .route('/')
     .get((req, res, next) => {
-        NoteService.getAllNotes(
-            req.app.get('db')
-        )
-            .then(note => {
-                res.json({
-                    id: note.id,
-                    title: xss(note.title),
-                    modified: note.modified,
-                    content: xss(note.content),
-                    folderId: note.folderId
-
-                })
+        NoteService.getAllNotes(req.app.get('db'))
+            .then(notes => {
+                res.json(notes)
             })
             .catch(next)
     })
