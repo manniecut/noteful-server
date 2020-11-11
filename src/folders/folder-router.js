@@ -1,4 +1,6 @@
+const path = require('path')
 const express = require('express')
+const xss = require('xss')
 const FolderService = require('./folder-service')
 
 const folderRouter = express.Router()
@@ -38,7 +40,7 @@ folderRouter
             .then(folder => {
                 res
                     .status(201)
-                    .location(req.originalUrl + `/${folder.id}`)
+                    .location(path.posix.join(req.originalUrl, `/${folder.id}`))
                     .json(folder)
             })
             .catch(next)
@@ -67,9 +69,6 @@ folderRouter
         res.json({
             id: folder.id,
             title: xss(folder.title),
-            modified: folder.modified,
-            content: xss(folder.content),
-            folderId: folder.folderId
         })
     })
     .delete((req, res, next) => {
