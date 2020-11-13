@@ -6,15 +6,18 @@ const FolderService = require('./folder-service')
 const folderRouter = express.Router()
 const jsonParser = express.json()
 
+const sterilizeFolder = folder => ({
+    id: folder.id,
+    title: xss(folder.title)
+})
+
 
 folderRouter
     .route('/')
     .get((req, res, next) => {
-        FolderService.getAllFolders(
-            req.app.get('db')
-        )
+        FolderService.getAllFolders(req.app.get('db'))
             .then(folders => {
-                res.json(folders)
+                res.json(folders.map(sterilizeFolder))
             })
             .catch(next)
     })
@@ -38,7 +41,7 @@ folderRouter
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${folder.id}`))
-                    .json(folder)
+                    .json(sterilizeFolder(folder))
             })
             .catch(next)
     })
@@ -54,19 +57,16 @@ folderRouter
                 if (!folder) {
                     return res.status(404).json({
                         error: { message: `Folder doesn't exist` }
-
                     })
                 }
                 res.folder = folder
                 next()
+
             })
             .catch(next)
     })
     .get((req, res, next) => {
-        res.json({
-            id: folder.id,
-            title: xss(folder.title),
-        })
+        res.json(sterilizeFolder(res.folder))
     })
     .delete((req, res, next) => {
         FolderService.deleteFolder(

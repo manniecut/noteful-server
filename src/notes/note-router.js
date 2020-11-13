@@ -2,22 +2,31 @@ const path = require('path')
 const express = require('express')
 const xss = require('xss')
 const NoteService = require('./note-service')
+const { serialize } = require('v8')
 
 const noteRouter = express.Router()
 const jsonParser = express.json()
+
+const sterilizeNote = note => ({
+    id: note.id,
+    folderId: note.folderid,
+    modified: note.modified,
+    title: xss(note.title),
+    content: xss(note.content),
+})
 
 noteRouter
     .route('/')
     .get((req, res, next) => {
         NoteService.getAllNotes(req.app.get('db'))
             .then(notes => {
-                res.json(notes)
+                res.json(notes.map(sterilizeNote))
             })
             .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const { title, content, folderId } = req.body
-        const newNote = { title, content, folderId }
+        const { title, content, folderid } = req.body
+        const newNote = { title, content, folderid }
 
         for (const [key, value] of Object.entries(newNote)) {
             if (value == null) {
@@ -35,7 +44,7 @@ noteRouter
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${note.id}`))
-                    .json(note)
+                    .json(sterilizeNote(note))
             })
             .catch(next)
     })
@@ -60,13 +69,7 @@ noteRouter
             .catch(next)
     })
     .get((req, res, next) => {
-        res.json({
-            id: note.id,
-            title: xss(note.title),
-            modified: note.modified,
-            content: xss(note.content),
-            folderId: note.folderId
-        })
+        res.json(sterilizeNote(res.note))
     })
     .delete((req, res, next) => {
         NoteService.deleteNote(
