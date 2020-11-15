@@ -2,7 +2,6 @@ const path = require('path')
 const express = require('express')
 const xss = require('xss')
 const NoteService = require('./note-service')
-const { serialize } = require('v8')
 
 const noteRouter = express.Router()
 const jsonParser = express.json()
@@ -25,7 +24,7 @@ noteRouter
             .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const { title, content, folderid } = req.body
+        const { folderid, title, content, modified } = req.body
         const newNote = { title, content, folderid }
 
         for (const [key, value] of Object.entries(newNote)) {
@@ -35,6 +34,7 @@ noteRouter
                 })
             }
         }
+        newNote.modified = modified
 
         NoteService.insertNote(
             req.app.get('db'),

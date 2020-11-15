@@ -80,13 +80,6 @@ values (
     );
 insert into note (title, modified, content, folderId)
 values (
-        'Blue-faced booby',
-        '4/12/2020',
-        'In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.',
-        3
-    );
-insert into note (title, modified, content, folderId)
-values (
         'Kangaroo',
         '9/16/2020',
         'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.',
