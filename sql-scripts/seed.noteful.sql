@@ -1,13 +1,14 @@
--- first remove any data that may be present
 BEGIN;
 TRUNCATE folder,
 note RESTART IDENTITY CASCADE;
--- insert some folders
+
+
 INSERT INTO folder (title)
 VALUES ('Important'),
-    ('Super'),
-    ('Spangley');
--- insert some notes
+    ('Importanter'),
+    ('Most Important');
+
+
 insert into note (title, modified, content, folderId)
 values (
         'Little heron',

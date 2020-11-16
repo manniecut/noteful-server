@@ -8,7 +8,7 @@ const jsonParser = express.json()
 
 const sterilizeNote = note => ({
     id: note.id,
-    folderId: note.folderid,
+    folderid: note.folderid,
     modified: note.modified,
     title: xss(note.title),
     content: xss(note.content),
@@ -82,8 +82,9 @@ noteRouter
             .catch(next)
     })
     .patch(jsonParser, (req, res, next) => {
-        const { title, content, folderId } = req.body
-        const noteToUpdate = { title, content, folderId }
+        const { title, content, folderid, modified } = req.body
+        const noteToUpdate = { title, content, folderid, modified }
+        console.log(noteToUpdate)
 
         if (!noteToUpdate.title)
             return res.status(400).json({
