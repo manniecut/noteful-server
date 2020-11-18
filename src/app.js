@@ -19,6 +19,12 @@ app.use(cors())
 app.use('/api/notes', noteRouter)
 app.use('/api/folders', folderRouter)
 
+// check health of server: 
+
+app.get('/health', (req, res, next) => {
+    res.send('Server is active');
+})
+
 
 app.use(function errorHandler(error, req, res, next) {
     let response
