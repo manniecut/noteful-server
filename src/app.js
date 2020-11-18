@@ -26,7 +26,7 @@ app.get('/health', (req, res, next) => {
 })
 
 
-app.use(function errorHandler(error, req, res, next) {
+/*app.use(function errorHandler(error, req, res, next) {
     let response
     if (NODE_ENV === 'production') {
         response = { error: { message: 'server error' } }
@@ -35,6 +35,12 @@ app.use(function errorHandler(error, req, res, next) {
         response = { message: error.message, error }
     }
     res.status(500).json(response)
-})
+})*/
+
+
+app.use((error, req, res, next) => {
+    console.log("server error:", error.message);
+    res.status(error.status || 500).json({ error: error.message, }); next();
+});
 
 module.exports = app;
